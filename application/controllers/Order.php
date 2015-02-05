@@ -42,10 +42,10 @@ class Order extends Application
         if ($order_num == null)
             redirect('/order/neworder');
 
-        // Retrieve the order record from the database
+        // Retrieve the order record
         $order = $this->orders->get($order_num);
 
-        // Fill in page parameters
+        // Pass template parameters
         $this->data['pagebody']  = 'show_menu';
         $this->data['order_num'] = $order_num;
         $this->data['title']     = 'order #'.$order_num.', '.$this->orders->total($order_num);
@@ -74,10 +74,14 @@ class Order extends Application
     // checkout
     function checkout($order_num)
     {
-        $this->data['title'] = 'Checking Out';
-        $this->data['pagebody'] = 'show_order';
+        // Pass template parameters
+        $this->data['pagebody']  = 'show_order';
         $this->data['order_num'] = $order_num;
-        //FIXME
+        $this->data['title']     = 'Checking Out';
+
+        // Pass page content parameters
+        $this->data['items'] = $this->orders->details($order_num);
+        $this->data['total'] = $this->orders->total($order_num);
 
         $this->render();
     }

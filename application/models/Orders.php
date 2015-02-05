@@ -17,18 +17,22 @@ class Orders extends MY_Model
     // add an item to an order
     function add_item($num, $code)
     {
-        // if a previous order item exists, update it; create a new order item
+        // // Retrieve the CodeIgniter instance & load the Orderitems model.
+        // $CI = &get_instance();
+        // $CI->load->model('orderitems');
+
+        // If a previous order item exists, update it; create a new order item
         // otherwise.
         if($this->orderitems->exists($num, $code))
         {
-            // get and update an old order item.
+            // Get and update an old order item.
             $old_order_item = $this->orderitems->get($num, $code);
             $old_order_item->quantity += 1;
             $this->orderitems->update($old_order_item);
         }
         else
         {
-            // create and add a new order item.
+            // Create and add a new order item.
             $new_order_item = $this->orderitems->create();
             $new_order_item->order    = $num;
             $new_order_item->item     = $code;
@@ -40,6 +44,10 @@ class Orders extends MY_Model
     // calculate the total for an order
     function total($num)
     {
+        // // Retrieve the CodeIgniter instance & load the Orderitems model.
+        // $CI = &get_instance();
+        // $CI->load->model('orderitems');
+
         // Retrieve order items for the order
         $order_items = $this->orderitems->some('order',$num);
 
@@ -65,7 +73,25 @@ class Orders extends MY_Model
     // retrieve the details for an order
     function details($num)
     {
+        // // Retrieve the CodeIgniter instance & load the Orderitems model.
+        // $CI = &get_instance();
+        // $CI->load->model('orderitems');
 
+        // Retrieve all items associated with the order
+        $items = $this->orderitems->some('order', $num);
+
+        // Prepare the items for display; make them usable for the show_order
+        // view
+        $display_items = array();
+        foreach($items as $item)
+        {
+            $display_item = new StdClass;
+            $display_item->code     = $item->item;
+            $display_item->quantity = $item->quantity;
+            $display_items[] = $display_item;
+        }
+
+        return $display_items;
     }
 
     // cancel an order
