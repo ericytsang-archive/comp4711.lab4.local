@@ -38,12 +38,16 @@ class Order extends Application {
         if ($order_num == null)
             redirect('/order/neworder');
 
-        $this->data['pagebody'] = 'show_menu';
+        // Retrieve the order record from the database
+        $order = $this->orders->get($order_num);
+
+        // Fill in page parameters
+        $this->data['pagebody']  = 'show_menu';
         $this->data['order_num'] = $order_num;
-        //FIXME
+        $this->data['title']     = 'order #'.$order_num.', $'.$this->orders->total($order_num);
 
         // Make the columns
-        $this->data['meals'] = $this->make_column('m');
+        $this->data['meals']  = $this->make_column('m');
         $this->data['drinks'] = $this->make_column('d');
         $this->data['sweets'] = $this->make_column('s');
 
@@ -52,8 +56,7 @@ class Order extends Application {
 
     // make a menu ordering column
     function make_column($category) {
-        //FIXME
-        return $items;
+        return $this->menu->some('category',$category);
     }
 
     // add an item to an order
