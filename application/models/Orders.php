@@ -38,9 +38,8 @@ class Orders extends MY_Model {
         $order->total = $total;
         $this->update($order);
 
-        // Return the total
-        $money_string = sprintf("$%.2f",$total);
-        return $money_string;
+        // Return the total as a nicely formatted money string
+        return sprintf("$%.2f",$total);
     }
 
     // retrieve the details for an order
