@@ -5,9 +5,11 @@
  *
  * @author jim
  */
-class Menu extends MY_Model {
+class Menu extends MY_Model
+{
     // constructor
-    function __construct() {
+    function __construct()
+    {
         parent::__construct('menu','code');
     }
 }
