@@ -2,9 +2,9 @@
 
 /**
  * Order handler
- * 
+ *
  * Implement the different order handling usecases.
- * 
+ *
  * controllers/welcome.php
  *
  * ------------------------------------------------------------------------
@@ -17,7 +17,18 @@ class Order extends Application {
 
     // start a new order
     function neworder() {
-        //FIXME
+
+        // Get highest existing order number
+        $order_num = $this->orders->highest();
+
+        // Create a new order
+        $new_order = $this->orders->create();
+        $new_order->num    = $order_num+1;    // new order; highest order number plus 1
+        $new_order->date   = date('Y-m-d');
+        $new_order->status = 'a';
+
+        // Save the new order to the database
+        $this->orders->add($new_order);
 
         redirect('/order/display_menu/' . $order_num);
     }
