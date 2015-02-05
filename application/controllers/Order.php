@@ -44,7 +44,7 @@ class Order extends Application {
         // Fill in page parameters
         $this->data['pagebody']  = 'show_menu';
         $this->data['order_num'] = $order_num;
-        $this->data['title']     = 'order #'.$order_num.', $'.$this->orders->total($order_num);
+        $this->data['title']     = 'order #'.$order_num.', '.$this->orders->total($order_num);
 
         // Make the columns
         $this->data['meals']  = $this->make_column('m');
