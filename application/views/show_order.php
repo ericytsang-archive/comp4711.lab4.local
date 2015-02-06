@@ -18,7 +18,7 @@
     {/items}
 </table>
 <div class="row">
-    <a href="/order/proceed/{order_num}" class="btn btn-large btn-success {okornot}">Proceed</a>
-    <a href="/order/display_menu/{order_num}" class="btn btn-large btn-primary">Keep shopping</a>
-    <a href="/order/cancel/{order_num}" class="btn btn-large btn-danger">Forget about it</a>
+    <button onclick="location.href = '/order/proceed/{order_num}';" class="btn btn-large btn-success" {okornot}>Proceed</button>
+    <button onclick="location.href = '/order/display_menu/{order_num}';" class="btn btn-large btn-primary">Keep shopping</button>
+    <button onclick="location.href = '/order/cancel/{order_num}';" class="btn btn-large btn-danger">Forget about it</button>
 </div>
