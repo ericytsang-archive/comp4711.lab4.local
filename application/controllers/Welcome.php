@@ -35,9 +35,9 @@ class Welcome extends Application
         {
             // echo $order;
             $this1 = array(
-                'num' => $order->num,
+                'num' => '#'.$order->num,
                 'datetime' => $order->date,
-                'amount' => $order->total
+                'amount' => '$'.$order->total
             );
             $orders[] = $this1;
         }
