@@ -4,6 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // location of data folders
 define('DATA_FOLDER', './data');
 
+// string used to separate input field data in tmp files
+define('SEPARATOR', '
+');
+
 /*
 |--------------------------------------------------------------------------
 | File and Directory Modes
