@@ -42,6 +42,9 @@ class Order extends Application
         if ($order_num == null)
             redirect('/order/neworder');
 
+        // Load the array helper
+        $this->load->helper('array');
+
         // Retrieve the order record
         $order = $this->orders->get($order_num);
 
@@ -54,6 +57,11 @@ class Order extends Application
         $this->data['meals']  = $this->make_column('m');
         $this->data['drinks'] = $this->make_column('d');
         $this->data['sweets'] = $this->make_column('s');
+
+        // Inject extra order_num property into arrays
+        inject_property($this->data['meals'],  'order_num', $order_num);
+        inject_property($this->data['drinks'], 'order_num', $order_num);
+        inject_property($this->data['sweets'], 'order_num', $order_num);
 
         $this->render();
     }
