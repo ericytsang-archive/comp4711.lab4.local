@@ -85,9 +85,13 @@ class Orders extends MY_Model
         $display_items = array();
         foreach($items as $item)
         {
+            $menu_item = $this->menu->get($item->item);
+
             $display_item = new StdClass;
-            $display_item->code     = $item->item;
-            $display_item->quantity = $item->quantity;
+            $display_item->code      = $item->item;
+            $display_item->name      = $menu_item->name;
+            $display_item->unitprice = $menu_item->price;
+            $display_item->quantity  = $item->quantity;
             $display_items[] = $display_item;
         }
 
