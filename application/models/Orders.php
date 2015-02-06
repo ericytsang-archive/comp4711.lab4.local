@@ -97,14 +97,46 @@ class Orders extends MY_Model
     // cancel an order
     function flush($num)
     {
+        // Update the order to cancelled status
+        $order = $this->orders->get($num);
+        $order->status = 'x';
+        $this->orders->update($order);
 
+        // Delete all order items related to the order
+        $this->orderitems->delete_some($num);
     }
 
     // validate an order
     // it must have at least one item from each category
     function validate($num)
     {
-        return false;
+        // // Retrieve the CodeIgniter instance & load the Menu model.
+        // $CI = &get_instance();
+        // $CI->load->model('menu');
+
+        // Set of existing item categories in order
+        $order_categories = array();
+
+        // Set of existing item categories in menu
+        $menu_categories = array();
+
+        // Populate the order_categories set
+        $order_items = $this->orderitems->some('order', $num);
+        foreach($order_items as $num)
+        {
+            $menu_item = $this->menu->get($num->item);
+            $order_categories[$menu_item->category] = true;
+        }
+
+        // Populate the menu_categories set
+        $menu_items = $this->menu->all();
+        foreach($menu_items as $menu_item)
+        {
+            $menu_categories[$menu_item->category] = true;
+        }
+
+        // Compare the sets for equality (validate) & return
+        return ($order_categories == $menu_categories);
     }
 
 }
