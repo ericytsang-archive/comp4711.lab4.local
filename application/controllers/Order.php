@@ -27,7 +27,7 @@ class Order extends Application
         // Create a new order
         $new_order = $this->orders->create();
         $new_order->num    = $order_num+1;    // new order; highest order number plus 1
-        $new_order->date   = date('Y-m-d');
+        $new_order->date   = date('Y-m-d H:i:s');
         $new_order->status = 'a';
 
         // Save the new order to the database
@@ -88,8 +88,9 @@ class Order extends Application
         $this->data['title']     = 'Checking Out';
 
         // Pass page content parameters
-        $this->data['items'] = $this->orders->details($order_num);
-        $this->data['total'] = $this->orders->total($order_num);
+        $this->data['items']   = $this->orders->details($order_num);
+        $this->data['total']   = $this->orders->total($order_num);
+        $this->data['okornot'] = $this->orders->validate($order_num);
 
         $this->render();
     }
@@ -97,14 +98,21 @@ class Order extends Application
     // proceed with checkout
     function proceed($order_num)
     {
-        //FIXME
+        // Update the order to complete status
+        $order = $this->orders->get($order_num);
+        $order->date   = date('Y-m-d H:i:s');
+        $order->status = 'c';
+        $this->orders->update($order);
+
         redirect('/');
     }
 
     // cancel the order
     function cancel($order_num)
     {
-        //FIXME
+        // Cancel the order
+        $this->orders->flush($order_num);
+
         redirect('/');
     }
 
