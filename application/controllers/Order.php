@@ -12,12 +12,19 @@
 class Order extends Application
 {
 
+    // constructor
     function __construct()
     {
         parent::__construct();
     }
 
-    // start a new order
+    /**
+     * creates a new order record in the database. the new order has no order
+     *   items associated with it, and it is automatically assigned the next
+     *   available order number.
+     *
+     * @return  redirects the user to the display_menu page.
+     */
     function neworder()
     {
 
@@ -26,7 +33,7 @@ class Order extends Application
 
         // Create a new order
         $new_order = $this->orders->create();
-        $new_order->num    = $order_num+1;    // new order; highest order number plus 1
+        $new_order->num    = $order_num+1;
         $new_order->date   = date('Y-m-d H:i:s');
         $new_order->status = 'a';
 
@@ -36,7 +43,16 @@ class Order extends Application
         redirect('/order/display_menu/' . $order_num);
     }
 
-    // add to an order
+    /**
+     * shows the menu page in the context of an order; the menu page will
+     *   display the order's order number, and the current total.
+     *
+     * @param  {Number} $order_num order number of the order to display this
+     *   menu in the context of. if it is null, a new order will be started.
+     *
+     * @return  shows the dusplay_menu page in the context of the order
+     *   associated with the $order_num parameter.
+     */
     function display_menu($order_num = null)
     {
         if ($order_num == null)
@@ -51,7 +67,8 @@ class Order extends Application
         // Pass template parameters
         $this->data['pagebody']  = 'show_menu';
         $this->data['order_num'] = $order_num;
-        $this->data['title']     = 'order #'.$order_num.', '.$this->orders->total($order_num);
+        $this->data['title']     = 'order #'.$order_num.', '
+            .$this->orders->total($order_num);
 
         // Make the columns
         $this->data['meals']  = $this->make_column('m');
@@ -66,20 +83,41 @@ class Order extends Application
         $this->render();
     }
 
-    // make a menu ordering column
+    /**
+     * returns all the menu item records associated with the $category
+     *   parameter.
+     *
+     * @param  {Character} $category character specifying which category of menu
+     *   items to return.
+     *
+     * @return all menu item records associated with the $category parameter.
+     */
     function make_column($category)
     {
         return $this->menu->some('category',$category);
     }
 
-    // add an item to an order
+    /**
+     * adds the menu item (with id $item) to the order (with id $order_num).
+     *
+     * @param {Number} $order_num number of the order to add the menu item to.
+     * @param {Number} $item id of the menu item to add to the order.
+     */
     function add($order_num, $item)
     {
         $this->orders->add_item($order_num, $item);
         redirect('/order/display_menu/' . $order_num);
     }
 
-    // checkout
+    /**
+     * loads the checkout page in the context of the order associated with the
+     *   parameter $order_num.
+     *
+     * @param  {Number} $order_num number of the order to display the checkout
+     *   page in the context of.
+     *
+     * @return shows the checkout page in the context of the specified order.
+     */
     function checkout($order_num)
     {
         // Pass template parameters
@@ -96,7 +134,16 @@ class Order extends Application
         $this->render();
     }
 
-    // proceed with checkout
+    /**
+     * proceed with checkout, and buy the food. updates the status of the order
+     *   to complete, and updates the time stamp to when the order was checked
+     *   out.
+     *
+     * @param  {Number} $order_num number of the order that is being checked
+     *   out.
+     *
+     * @return redirects the user to the home page.
+     */
     function proceed($order_num)
     {
         // Update the order to complete status
@@ -108,7 +155,14 @@ class Order extends Application
         redirect('/');
     }
 
-    // cancel the order
+    /**
+     * cancels the order; updates the status of the order to canceled, and
+     *   removes all menu items associated with it.
+     *
+     * @param  {Number} $order_num number of the order that is being canceled.
+     *
+     * @return redirects the user to the home page.
+     */
     function cancel($order_num)
     {
         // Cancel the order
